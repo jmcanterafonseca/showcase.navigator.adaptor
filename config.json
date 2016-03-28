@@ -1,0 +1,16 @@
+{
+  "serverPort": 7007,
+  
+  "rootContextBrokerUrl": "http://130.206.83.68:1026",
+
+  "here": {
+    "geocodingUrl": "http://geocoder.cit.api.here.com",
+    "reverseGeocodingUrl": "http://reverse.geocoder.cit.api.here.com",
+    "placesUrl": "http://places.cit.api.here.com",
+    "routeUrl": "http://route.cit.api.here.com",
+    "appId": "U3zMQKY4zIGOTKd6uor2",
+    "appCode": "OJ_1KZM3We8MsR0LfKRyCQ"
+  },
+  
+  "magicTokenPayment": "businessecosystemmwc"
+}
