@@ -106,11 +106,14 @@ function getData(configData, requestData) {
 }
 
 function getProviderFunction(brokerData) {
-  if (brokerData.serviceType === 'orion-v1') {
+  if (brokerData.serviceType === 'ngsi-v1') {
     return queryOrionV1;
   }
-  else if (brokerData.serviceType === 'orion-v2') {
+  else if (brokerData.serviceType === 'ngsi-v2') {
     return queryOrionV2;
+  }
+  else if (brokerData.serviceType === 'ost') {
+     return queryOST;
   }
 }
 
@@ -145,6 +148,12 @@ function queryOrionV2(serviceData, queryData) {
       });
     }
     
+    if (serviceData.q) {
+      Object.keys(serviceData.q).forEach(function(aKey) {
+        q += aKey + ':' + serviceData.q[aKey] + ';'
+      });
+    }
+    
     var options = {
       baseUrl: serviceData.url,
       url: '/entities',
@@ -164,9 +173,10 @@ function queryOrionV2(serviceData, queryData) {
     
     // Check for georel query params
     if (queryData.georel) {
-      options.qs.georel = queryData.fullGeoRel;
-      options.qs.coords = queryData.coords;
+      options.qs.georel   = queryData.fullGeoRel;
+      options.qs.coords   = queryData.coords;
       options.qs.geometry = queryData.geometry;
+      options.qs.orderBy  = 'geo:distance';
     }
     
     console.log('Orion V2 query', JSON.stringify(options));
@@ -220,7 +230,54 @@ function queryOrionV1(serviceData, queryData) {
 }
 
 function queryOST(serviceData, requestData) {
-  return;
+  var OrionHelper = require('fiware-orion-client').NgsiHelper;
+  
+  return new Promise(function(resolve, reject) {
+    var coordsArr = requestData.coords.split(',');
+    var coordsStr = coordsArr[1] + ',' + coordsArr[0];
+
+    var options = {
+      url: serviceData.url,
+      qs: {
+        center: coordsStr,
+        range: requestData.maxDistance / 1000,
+        key: serviceData.key
+      },
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'fiware-here-adapter'
+      },
+      json: true
+    };
+
+    if (serviceData.poisCat) {
+      options.qs.category = serviceData.poisCat;
+    }
+    
+    console.log('OST service: ', JSON.stringify(options.qs));
+
+    Request.get(options, function(err, response, body) {
+      if (err) {
+        reject(err.message);
+      }
+      if (!body) {
+        reject('Body is not valid');
+      }
+      if (response.statusCode !== 200) {
+        reject('HTTP Status Code is not valid:' + response.statusCode);
+      }
+
+      if (body.errorCode) {
+        if (body.errorCode.code === '404') {
+          resolve([]);
+        } else {
+          reject(body.errorCode);
+        }
+      }
+      
+      resolve(OrionHelper.parse(body));
+    });
+  });
 }
 
 

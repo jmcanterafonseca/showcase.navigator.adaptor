@@ -19,12 +19,12 @@ var contextDataAntwerp = {
       StreetParking: {
         url: 'http://asign-demo02.romcloud.be:1026/v1',
         entityType: 'StreetParking',
-        serviceType: 'orion-v1'
+        serviceType: 'ngsi-v1'
       },
       ParkingRestriction: {
         url: 'http://asign-demo02.romcloud.be:1026/v1',
         entityType: 'ParkingRestriction',
-        serviceType: 'orion-v1'
+        serviceType: 'ngsi-v1'
       }
     }
 };
@@ -41,36 +41,36 @@ var contextDataPorto = {
       AmbientArea: {
         url: 'http://130.206.83.68:1026/v2',
         entityType: 'AmbientArea',
-        serviceType: 'orion-v2'
+        serviceType: 'ngsi-v2'
       },
       TrafficEvent: {
         url: 'http://fiware-porto.citibrain.com:1026/v1',
         entityType: 'TrafficEvent',
-        serviceType: 'orion-v1'
+        serviceType: 'ngsi-v1'
       },
       AmbientObserved: {
         url: 'http://fiware-porto.citibrain.com:1026/v1',
         entityType: 'EnvironmentEvent',
-        serviceType: 'orion-v1'
+        serviceType: 'ngsi-v1'
       },
       ParkingLot: {
         url: 'https://api.ost.pt/ngsi10/contextEntityTypes/pois',
         poisCat: '418',
-        serviceType: 'ngsi10',
+        serviceType: 'ost',
         key: 'hackacityporto2015_server'
       },
       StreetParking: {
         url: 'http://fiware-porto.citibrain.com:1026/v1',
         entityType: 'StreetParking',
-        serviceType: 'orion-v1'
+        serviceType: 'ngsi-v1'
       },
       CityEvent: {
         url: 'https://api.ost.pt/ngsi10/contextEntityTypes/events',
-        serviceType: 'ngsi10',
+        serviceType: 'ost',
         key: 'hackacityporto2015_server'
       },
       WeatherForecast: {
-        url:    'http://130.206.83.68:1028/v2/entities',
+        url:    'http://130.206.83.68:1028/v2',
         q: {
           country: 'PT',
           addressLocality: 'Porto'
@@ -81,14 +81,14 @@ var contextDataPorto = {
       GasStation: {
         url: 'https://api.ost.pt/ngsi10/contextEntityTypes/pois',
         poisCat: '417',
-        serviceType: 'ngsi10',
+        serviceType: 'ost',
         key: 'hackacityporto2015_server',
         payment: true
       },
       Garage: {
         url: 'https://api.ost.pt/ngsi10/contextEntityTypes/pois',
         poisCat: '9',
-        serviceType: 'ngsi10',
+        serviceType: 'ost',
         key: 'hackacityporto2015_server',
         payment: true
       }
@@ -109,13 +109,13 @@ var contextDataAveiro = {
       url: 'http://fiware-aveiro.citibrain.com:1026/v1',
       entityType: 'ParkingLot',
       pattern: 'Aveiro*',
-      serviceType: 'orion-v1'
+      serviceType: 'ngsi-v1'
     },
     StreetParking: {
       url: 'http://fiware-aveiro.citibrain.com:1026/v1',
       entityType: 'StreetParking',
       pattern: 'Aveiro*',
-      serviceType: 'orion-v1'
+      serviceType: 'ngsi-v1'
     }
   }
 };
@@ -134,19 +134,19 @@ var contextDataSantander = {
       url: 'http://130.206.83.68:1026/v2',
       entityType: 'StreetParking',
       pattern: 'santander.*',
-      serviceType: 'orion-v2'
+      serviceType: 'ngsi-v2'
     },
     ParkingLot: {
       url:     'http://mu.tlmat.unican.es:8099/v1',
       pattern: 'urn:x-iot:smartsantander:parking:indoor.*',
-      serviceType:  'orion-v1',
+      serviceType:  'ngsi-v1',
       entityType:  'ParkingLot',
       fiwareService: 'smartsantander',
       fiwareServicePath: '/parking/#'
     },
     AmbientObserved: {
       url:     'http://mu.tlmat.unican.es:8099/v1',
-      serviceType: 'orion-v1',
+      serviceType: 'ngsi-v1',
       entityType:  'AmbientObserved',
       pattern: 'urn:x-iot:smartsantander:environmental:mobile.*',
       fiwareService: 'smartsantander'
@@ -154,11 +154,11 @@ var contextDataSantander = {
     AmbientArea: {
       url: 'http://mu.tlmat.unican.es:8099/v1',
       entityType: 'AmbientArea',
-      serviceType: 'orion-v1',
+      serviceType: 'ngsi-v1',
       fiwareService: 'smartsantander'
     },
     WeatherForecast: {
-      url:    'http://130.206.83.68:1028/v2/entities',
+      url:    'http://130.206.83.68:1028/v2',
       q: {
         postalCode: '39001',
         country: 'ES'
@@ -185,7 +185,7 @@ var contextDataSevilla = {
       entityType:  'ParkingLotZone'
     },
     WeatherForecast: {
-      url:    'http://130.206.83.68:1028/v2/entities',
+      url:    'http://130.206.83.68:1028/v2',
       q: {
         postalCode: '41001',
         country: 'ES'
@@ -209,10 +209,10 @@ var contextDataMadrid = {
       url: 'http://130.206.83.68:1029/v1',
       entityType: 'AmbientObserved',
       pattern: 'Madrid.*',
-      serviceType: 'orion-v1'
+      serviceType: 'ngsi-v1'
     },
     WeatherForecast: {
-      url:    'http://130.206.83.68:1028/v2/entities',
+      url:    'http://130.206.83.68:1028/v2',
       q: {
         postalCode: '28001',
         country: 'ES'
