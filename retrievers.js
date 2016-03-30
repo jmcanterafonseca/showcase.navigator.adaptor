@@ -1,6 +1,7 @@
 'use strict';
 
 const Request = require('request');
+const adaptorsMap = require('./adaptors.js');
 
 function NgsiV2Retriever(serviceData, queryData) {
   this.serviceData = serviceData;
@@ -81,7 +82,18 @@ function NgsiV1Retriever(serviceData, queryData) {
 }
 
 NgsiV1Retriever.prototype.run = function() {
-  return queryOrionV1(this.serviceData, this.queryData);
+  return new Promise((resolve, reject) => {
+    queryOrionV1(this.serviceData, this.queryData).then((data) => {
+      var out = data;
+      var adapter = this.serviceData.adapterKey;
+      console.log('Adapter: ', adapter);
+      if (adapter) {
+         out = adaptorsMap[adapter](data);
+      }
+      
+      resolve(out);
+    }, (error) => reject);
+  });
 }
 
 // Performs a query through NGSIv1
@@ -177,4 +189,3 @@ function queryOST(serviceData, requestData) {
 module.exports.NgsiV2Retriever = NgsiV2Retriever;
 module.exports.NgsiV1Retriever = NgsiV1Retriever;
 module.exports.OstRetriever    = OstRetriever;
-

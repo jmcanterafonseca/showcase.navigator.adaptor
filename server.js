@@ -13,7 +13,7 @@ const Request = require('request');
 // Server configuration
 const config  = require('./config.json');
 
-require('./promise.js');
+require('./utils/promise.js');
 
 const Retrievers = require('./retrievers.js');
 
