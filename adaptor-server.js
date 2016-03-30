@@ -1,16 +1,24 @@
 'use strict';
 
-const Hapi = require('hapi');
+/**
+ *   Main entry point for the adaptor server
+ * 
+ *
+ */
+
+const Hapi    = require('hapi');
+const Joi     = require('joi');
 const Request = require('request');
 
-var config = require('./config.json');
+// Server configuration
+const config  = require('./config.json');
+
+require('./promise.js');
 
 const server = new Hapi.Server();
 server.connection({
   port: config.serverPort
 });
-
-var Joi = require('joi');
 
 server.route({
     method: 'GET',
@@ -25,6 +33,7 @@ server.route({
         }
       }
     },
+    
     handler: function (request, reply) {
       var georel = request.query.georel;
       var geoTokens = georel.split(';');
@@ -66,7 +75,7 @@ server.route({
       };
        
       // Obtains the end point which provides data about the city
-      getEndPointData(coords).then(function(configData) {
+      getEndPointData(coords).then(function (configData) {
         if (configData.length === 1) {
           return getData(configData[0], requestData);
         }
@@ -76,16 +85,24 @@ server.route({
         }
       }, function err(error) {
           reply(error);
-      }).then(function(smartCityData) {
+      }).then(function (data) {
           // Here smart city data is ready to be delivered
-          reply(smartCityData);
-      }).catch(function(err) {
+          var out = [];
+          for (let result of data.results) {
+            if (result) {
+              result = Array.isArray(result) ? result : [result];
+              out = out.concat(result);
+            }
+          }
+          reply(out);
+      }).catch(function (err) {
         console.error(err);
         reply(err);
       });
     }
 });
 
+// Obtains the final data to be delivered to the client
 function getData(configData, requestData) {
   var requests = [];
   
@@ -94,37 +111,48 @@ function getData(configData, requestData) {
   requestData.types.forEach(function(aType) {
     if (brokers[aType]) {
       var brokerData = brokers[aType];
-      var providerFunction = getProviderFunction(brokerData);
-      requests.push(providerFunction(brokerData, requestData));
+      var retriever = getRetriever(brokerData, requestData);
+      requests.push(retriever);
     }
     else {
       console.warn('No provider found for: ', aType);
     }
   });
   
-  return Promise.all(requests);
+  var executionData = Promise.parallel(requests);
+  
+  var resultHandler = function(r) {
+    console.log('Done!!', r.subject,
+                requests[r.subject].serviceData.entityType,
+                requests[r.subject].serviceData.url);
+  }
+  
+  for(var p of executionData.futures) {
+    p.then(resultHandler, function rejected(r) {
+      console.error('Error executing request: ',
+                    requests[r.subject].serviceData.entityType,
+                    requests[r.subject].serviceData.url,
+                    r.error);
+    });
+  }
+  
+  return executionData.all;
 }
 
-function getProviderFunction(brokerData) {
+// Determines a provider function
+function getRetriever(brokerData, requestData) {
   if (brokerData.serviceType === 'ngsi-v1') {
-    return queryOrionV1;
+    return new NgsiV1Retriever(brokerData, requestData);
   }
   else if (brokerData.serviceType === 'ngsi-v2') {
-    return queryOrionV2;
+    return new NgsiV2Retriever(brokerData, requestData);
   }
   else if (brokerData.serviceType === 'ost') {
-     return queryOST;
+     return new OstRetriever(brokerData, requestData);
   }
 }
 
-server.start((err) => {
-    if (err) {
-        throw err;
-    }
-    console.log('Server running at:', server.info.uri);
-});
-
-
+// Obtains all the end point data for the given coordinates
 function getEndPointData(coords) {
   return new Promise(function(resolve, reject) {
     getCity(coords).then(function(cityData) {
@@ -138,6 +166,16 @@ function getEndPointData(coords) {
   });
 }
 
+function NgsiV2Retriever(serviceData, queryData) {
+  this.serviceData = serviceData;
+  this.queryData = queryData;
+}
+
+NgsiV2Retriever.prototype.run = function() {
+  return queryOrionV2(this.serviceData, this.queryData);
+}
+
+// Performs a query through NGSIv2
 function queryOrionV2(serviceData, queryData) {
   return new Promise(function(resolve, reject) {
     var q = '';
@@ -181,7 +219,7 @@ function queryOrionV2(serviceData, queryData) {
     
     console.log('Orion V2 query', JSON.stringify(options));
     
-    Request.get(options, function(err, response, body) {
+    Request.get(options, function(err, response, body) {      
       if (err) {
         reject(err.message);
         return;
@@ -201,6 +239,16 @@ function queryOrionV2(serviceData, queryData) {
   });
 }
 
+function NgsiV1Retriever(serviceData, queryData) {
+  this.serviceData = serviceData;
+  this.queryData = queryData;
+}
+
+NgsiV1Retriever.prototype.run = function() {
+  return queryOrionV1(this.serviceData, this.queryData);
+}
+
+// Performs a query through NGSIv1
 function queryOrionV1(serviceData, queryData) {
   console.log('Orion v1 Query: ', JSON.stringify(serviceData),
               JSON.stringify(queryData));
@@ -229,6 +277,16 @@ function queryOrionV1(serviceData, queryData) {
   });
 }
 
+function OstRetriever(serviceData, queryData) {
+  this.serviceData = serviceData;
+  this.queryData = queryData;
+}
+
+OstRetriever.prototype.run = function() {
+  return queryOST(this.serviceData, this.queryData);
+}
+
+// Performs a query through Porto OST service
 function queryOST(serviceData, requestData) {
   var OrionHelper = require('fiware-orion-client').NgsiHelper;
   
@@ -280,7 +338,7 @@ function queryOST(serviceData, requestData) {
   });
 }
 
-
+// Given a set of coordinates obtains the concerned city
 function getCity(coords) {
   return new Promise(function(resolve, reject) {
     var finalCoords = coords.split(',').slice(0,2).join(',');
@@ -290,7 +348,7 @@ function getCity(coords) {
       baseUrl: config.here.reverseGeocodingUrl,
       url: '/6.2/reversegeocode.json',
       qs: {
-        'app_id': config.here.appId,
+        'app_id':   config.here.appId,
         'app_code': config.here.appCode,
         prox: finalCoords + ',100',
         gen: 9,
@@ -333,3 +391,10 @@ function getCity(coords) {
     });
   });
 }
+
+server.start((err) => {
+  if (err) {
+      throw err;
+  }
+  console.log('Server running at:', server.info.uri);
+});

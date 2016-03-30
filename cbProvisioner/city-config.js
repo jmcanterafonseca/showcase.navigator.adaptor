@@ -51,13 +51,15 @@ var contextDataPorto = {
       AmbientObserved: {
         url: 'http://fiware-porto.citibrain.com:1026/v1',
         entityType: 'EnvironmentEvent',
-        serviceType: 'ngsi-v1'
+        serviceType: 'ngsi-v1',
+        adapterKey:  'porto-AmbientObserved'
       },
       ParkingLot: {
         url: 'https://api.ost.pt/ngsi10/contextEntityTypes/pois',
         poisCat: '418',
         serviceType: 'ost',
-        key: 'hackacityporto2015_server'
+        key: 'hackacityporto2015_server',
+        adapterKey:  'portoParkingLot'
       },
       StreetParking: {
         url: 'http://fiware-porto.citibrain.com:1026/v1',
