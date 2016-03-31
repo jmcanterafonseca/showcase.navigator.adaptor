@@ -3,6 +3,8 @@
 const Request = require('request');
 const adaptorsMap = require('./adaptors.js');
 
+const DEFAULT_TIMEOUT = 5000;
+
 function NgsiV2Retriever(serviceData, queryData) {
   this.serviceData = serviceData;
   this.queryData = queryData;
@@ -39,7 +41,9 @@ function queryOrionV2(serviceData, queryData) {
       headers: {
         'Accept': 'application/json'
       },
-      json: true
+      json: true,
+      
+      timeout: DEFAULT_TIMEOUT
     };
     
     if (q.length > 0) {
@@ -106,7 +110,8 @@ function queryOrionV1(serviceData, queryData) {
     url: serviceData.url,
     service: serviceData.fiwareService,
     path: serviceData.fiwareServicePath,
-    userAgent: 'fiware-here-adapter'
+    userAgent: 'fiware-here-adapter',
+    timeout: DEFAULT_TIMEOUT
   });
   
   var queryParams = {
@@ -165,7 +170,9 @@ function queryOST(serviceData, requestData) {
         'Accept': 'application/json',
         'User-Agent': 'fiware-here-adapter'
       },
-      json: true
+      json: true,
+      
+      timeout: DEFAULT_TIMEOUT
     };
 
     if (serviceData.poisCat) {
