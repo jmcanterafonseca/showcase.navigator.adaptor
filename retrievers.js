@@ -131,7 +131,19 @@ function OstRetriever(serviceData, queryData) {
 }
 
 OstRetriever.prototype.run = function() {
-  return queryOST(this.serviceData, this.queryData);
+  return new Promise((resolve, reject) => {
+    queryOST(this.serviceData, this.queryData).then((data) => {
+      var out = data;
+      var adapter = this.serviceData.adapterKey;
+      console.log('Adapter: ', adapter);
+      if (adapter) {
+         out = adaptorsMap[adapter](data);
+      }
+      
+      resolve(out);
+    }, (error) => reject);
+  });
+  return 
 }
 
 // Performs a query through Porto OST service

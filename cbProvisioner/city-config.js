@@ -59,7 +59,7 @@ var contextDataPorto = {
         poisCat: '418',
         serviceType: 'ost',
         key: 'hackacityporto2015_server',
-        adapterKey:  'portoParkingLot'
+        adapterKey:  'porto-ParkingLot'
       },
       StreetParking: {
         url: 'http://fiware-porto.citibrain.com:1026/v1',
