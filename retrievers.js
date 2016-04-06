@@ -3,7 +3,7 @@
 const Request = require('request');
 const adaptorsMap = require('./adaptors.js');
 
-const DEFAULT_TIMEOUT = 5000;
+const DEFAULT_TIMEOUT = 10000;
 
 function NgsiV2Retriever(serviceData, queryData) {
   this.serviceData = serviceData;
@@ -88,11 +88,23 @@ function NgsiV1Retriever(serviceData, queryData) {
 NgsiV1Retriever.prototype.run = function() {
   return new Promise((resolve, reject) => {
     queryOrionV1(this.serviceData, this.queryData).then((data) => {
+      console.log('Raw data: ', JSON.stringify(data));
       var out = data;
+      if (!out) {
+        resolve([]);
+        return;
+      }
+      
+      if (!Array.isArray(out)) {
+        out = [out];
+      }
+      
+      console.log('Out is: ', JSON.stringify(out));
+      
       var adapter = this.serviceData.adapterKey;
-      console.log('Adapter: ', adapter);
       if (adapter) {
-         out = adaptorsMap[adapter](data);
+         console.log('Adapter: ', adapter);
+         out = adaptorsMap[adapter](out);
       }
       
       resolve(out);
@@ -115,15 +127,26 @@ function queryOrionV1(serviceData, queryData) {
   });
   
   var queryParams = {
-    type: serviceData.entityType,
-    pattern: serviceData.pattern
+    type: serviceData.entityType
   };
   
+  if (serviceData.pattern) {
+    queryParams.pattern = serviceData.pattern;
+  }
+  
   var locationOptions = {
-     coords: queryData.coords,
-     geometry: 'Circle',
-     radius: queryData.maxDistance
+     coords: queryData.coords
   };
+  
+  if (queryData.fullGeoRel === 'coveredBy') {
+    locationOptions.geometry = 'Polygon';
+  }
+  else {
+    locationOptions.geometry = 'Circle';
+    locationOptions.radius   = queryData.maxDistance;
+  }
+  
+  console.log('Loc options: ', locationOptions, queryParams);
   
   return OrionClient.queryContext(queryParams, {
     location: locationOptions
@@ -140,8 +163,8 @@ OstRetriever.prototype.run = function() {
     queryOST(this.serviceData, this.queryData).then((data) => {
       var out = data;
       var adapter = this.serviceData.adapterKey;
-      console.log('Adapter: ', adapter);
       if (adapter) {
+         console.log('Adapter: ', adapter);
          out = adaptorsMap[adapter](data);
       }
       

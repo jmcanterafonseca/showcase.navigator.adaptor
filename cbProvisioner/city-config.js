@@ -59,7 +59,8 @@ var contextDataPorto = {
         poisCat: '418',
         serviceType: 'ost',
         key: 'hackacityporto2015_server',
-        adapterKey:  'porto-ParkingLot'
+        adapterKey:  'porto-ParkingLot',
+        entityType:  'ParkingLot'
       },
       StreetParking: {
         url: 'http://fiware-porto.citibrain.com:1026/v1',
@@ -69,7 +70,8 @@ var contextDataPorto = {
       CityEvent: {
         url: 'https://api.ost.pt/ngsi10/contextEntityTypes/events',
         serviceType: 'ost',
-        key: 'hackacityporto2015_server'
+        key: 'hackacityporto2015_server',
+        entityType: 'CityEvent'
       },
       WeatherForecast: {
         url:    'http://130.206.83.68:1028/v2',
@@ -85,14 +87,16 @@ var contextDataPorto = {
         poisCat: '417',
         serviceType: 'ost',
         key: 'hackacityporto2015_server',
-        payment: true
+        payment: true,
+        entityType: 'GasStation'
       },
       Garage: {
         url: 'https://api.ost.pt/ngsi10/contextEntityTypes/pois',
         poisCat: '9',
         serviceType: 'ost',
         key: 'hackacityporto2015_server',
-        payment: true
+        payment: true,
+        entityType: 'Garage'
       }
     }
 };

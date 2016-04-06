@@ -22,6 +22,11 @@ server.connection({
   port: config.serverPort
 });
 
+
+const PARKING        = 'Parking';
+const STREET_PARKING = 'StreetParking';
+const PARKING_LOT    = 'ParkingLot';
+
 server.route({
     method: 'GET',
     path: '/v2/entities',
@@ -40,7 +45,9 @@ server.route({
       var georel = request.query.georel;
       var geoTokens = georel.split(';');
       
-      if (geoTokens.length < 2) {
+      var isNear = georel.indexOf('near') !== -1;
+      
+      if (isNear && geoTokens.length < 2) {
         console.error('Max distance is not provided');
         reply({
           "error": "error"
@@ -48,23 +55,40 @@ server.route({
         return;
       }
       
-      var georel1 = geoTokens[0];
-      var georel2 = geoTokens[1];
+      var maxDistance = -1;
+      if (isNear) {
+        var georel1 = geoTokens[0];
+        var georel2 = geoTokens[1];
       
-      var distanceParams = georel2.split(':');
-      if (distanceParams[0] !== 'maxDistance') {
-        console.error('Max distance is not provided');
-        reply({
-          "error": "error"
-        });
-        return;
+        var distanceParams = georel2.split(':');
+        if (distanceParams[0] !== 'maxDistance') {
+          console.error('Max distance is not provided');
+          reply({
+            "error": "error"
+          });
+          return;
+        }
+        maxDistance = distanceParams[1];
+      }
+      else {
+        georel1 = georel;
       }
       
-      var maxDistance = distanceParams[1];
-      var coords = request.query.coords;
-      var geometry = request.query.geometry;
-      var types = request.query.type.split(',');
-      var coords = request.query.coords;
+      var typeParam = request.query.type;
+  
+      var coords      = request.query.coords;
+      var geometry    = request.query.geometry;
+      var types       = typeParam.split(',');
+      var coords      = request.query.coords;
+      
+      // Make 'Parking' a synonym for 'StreetParking' and 'ParkingLot'
+      var index = types.indexOf(PARKING);
+      if (index !== -1) {
+        types = types.filter(function (item) {
+          return (item !== PARKING);
+        });
+        types = types.concat([STREET_PARKING, PARKING_LOT]);
+      }
        
       var requestData = {
         coords:   coords,
@@ -158,7 +182,6 @@ function getRetriever(brokerData, requestData) {
 function getEndPointData(coords) {
   return new Promise(function(resolve, reject) {
     getCity(coords).then(function(cityData) {
-      console.log('City data', Retrievers.NgsiV2Retriever);
       return new Retrievers.NgsiV2Retriever({
         url: config.rootContextBrokerUrl + '/v2',
         entityType: 'CityConfiguration'
