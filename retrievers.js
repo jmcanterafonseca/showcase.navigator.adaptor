@@ -88,7 +88,6 @@ function NgsiV1Retriever(serviceData, queryData) {
 NgsiV1Retriever.prototype.run = function() {
   return new Promise((resolve, reject) => {
     queryOrionV1(this.serviceData, this.queryData).then((data) => {
-      console.log('Raw data: ', JSON.stringify(data));
       var out = data;
       if (!out) {
         resolve([]);
@@ -98,8 +97,6 @@ NgsiV1Retriever.prototype.run = function() {
       if (!Array.isArray(out)) {
         out = [out];
       }
-      
-      console.log('Out is: ', JSON.stringify(out));
       
       var adapter = this.serviceData.adapterKey;
       if (adapter) {
@@ -145,8 +142,6 @@ function queryOrionV1(serviceData, queryData) {
     locationOptions.geometry = 'Circle';
     locationOptions.radius   = queryData.maxDistance;
   }
-  
-  console.log('Loc options: ', locationOptions, queryParams);
   
   return OrionClient.queryContext(queryParams, {
     location: locationOptions

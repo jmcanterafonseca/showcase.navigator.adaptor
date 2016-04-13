@@ -1,9 +1,15 @@
 'use strict';
 
+// 10 seconds
+const DEFAULT_TIMEOUT_PROMISE = 10000;
+
 // Promise.parallel executes the list of runnables in batches which are
 // transparent to the developer
 Promise.parallel = function(runnables, pbatchSize) {
   const DEFAULT_BATCH_SIZE = 4;
+  
+  console.log('Parallel ...');
+  
   var batchSize = Math.min(pbatchSize || DEFAULT_BATCH_SIZE, runnables.length);
 
   var futureHandler = {
@@ -46,21 +52,44 @@ Promise.parallel = function(runnables, pbatchSize) {
       }
       console.log('Next to run: ', nextToRun);
 
-      runnables[nextToRun].run().then(function(idx, result) {
+      var timeoutId = -1;
+      var timeoutHappened = false;
+      
+      var resolutionFunction = function(idx, result) {
+        clearTimeout(timeoutId);
+        
+        if (timeoutHappened) {
+          console.log('Timeout of: ', nextToRun, 'before finishing');
+          return;
+        }
+        
         var resolver = this.promiseResolvers[idx];
         resolver && resolver.resolve({
           subject: idx,
           result: result
         });
         this.oncompleted(idx, result);
-      }.bind(this, nextToRun), function(idx, err) {
+      }.bind(this, nextToRun);
+      
+      var errorFunction = function(idx, err) {
         var resolver = this.promiseResolvers[idx];
         resolver && resolver.reject({
           subject: idx,
           error: err
         });
         this.onerror(idx, err);
-      }.bind(this, nextToRun));
+      }.bind(this, nextToRun);
+      
+      timeoutId = setTimeout(function() {
+        console.log('Timeout happened for: ', nextToRun);
+        timeoutHappened = true;
+        
+        errorFunction('Timeout');
+      }, DEFAULT_TIMEOUT_PROMISE);
+      
+      console.log('Timeout id: ', timeoutId);
+      
+      runnables[nextToRun].run().then(resolutionFunction, errorFunction);
     },
 
     set resolver(r) {
@@ -104,17 +133,39 @@ function* parallelGen(runnables, batchSize, futureHandler) {
   // Initially only the the first batch is launched
   for(var j = 0; j < batchSize; j++) {
     var newPromise = new Promise(function(index, resolve, reject) {
+      
+      var timeoutHappened = false;
+      var timeoutId = setTimeout(function() {
+        timeoutHappened = true;
+        reject({
+          subject: index,
+          error: 'timeout'
+        });
+        
+        futureHandler.onerror(index, 'timeout');        
+      }, DEFAULT_TIMEOUT_PROMISE);
+      
+      console.log('Timeout id', timeoutId);
+      
       runnables[j].run().then(function(result) {
+        clearTimeout(timeoutId);
+        if (timeoutHappened) {
+          console.log('Timeout of: ', index, ' before finishing');
+          return;
+        }        
         resolve({
           subject: index,
           result: result
         });
+        
         futureHandler.oncompleted(index, result);
       }, function(err) {
           reject({
             subject: index,
             error: err
-          })
+          });
+          
+          futureHandler.onerror(index, err);
       });
     }.bind(null, j));
 

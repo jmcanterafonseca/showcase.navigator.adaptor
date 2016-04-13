@@ -106,12 +106,16 @@ server.route({
           return getData(configData[0], requestData);
         }
         else {
-          console.log('Configuration not found for the city. Empty response');
+          console.warn('Configuration not found for the city. Empty response');
           return Promise.resolve([]);
         }
       }, function err(error) {
+          console.error('Error: ', error);
           reply(error);
       }).then(function (data) {
+          if (!data) {
+            return;
+          }
           // Here smart city data is ready to be delivered
           var out = [];
           for (let result of data.results) {
@@ -160,7 +164,7 @@ function getData(configData, requestData) {
                     requests[r.subject].serviceData.url,
                     r.error);
     });
-  }
+  }   
   
   return executionData.all;
 }
@@ -182,6 +186,7 @@ function getRetriever(brokerData, requestData) {
 function getEndPointData(coords) {
   return new Promise(function(resolve, reject) {
     getCity(coords).then(function(cityData) {
+      console.log('City data:', cityData);
       return new Retrievers.NgsiV2Retriever({
         url: config.rootContextBrokerUrl + '/v2',
         entityType: 'CityConfiguration'
@@ -236,6 +241,8 @@ function getCity(coords) {
       catch(Error) {
         reject('Data not found while resolving address');
       }
+      
+      console.log('Address: ', address);
 
       var cityInfo = {
         addressLocality: address.City,
