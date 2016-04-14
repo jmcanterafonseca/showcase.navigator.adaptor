@@ -27,6 +27,8 @@ const PARKING        = 'Parking';
 const STREET_PARKING = 'StreetParking';
 const PARKING_LOT    = 'ParkingLot';
 
+const Bf = require('./business_fwk.js');
+
 server.route({
     method: 'GET',
     path: '/v2/entities',
@@ -36,7 +38,8 @@ server.route({
             type:     Joi.string().required(),
             coords:   Joi.string().required(),
             georel:   Joi.string().required(),
-            geometry: Joi.string().required()
+            geometry: Joi.string().required(),
+            token:    Joi.string().optional()
         }
       }
     },
@@ -79,7 +82,8 @@ server.route({
       var coords      = request.query.coords;
       var geometry    = request.query.geometry;
       var types       = typeParam.split(',');
-      var coords      = request.query.coords;
+      
+      var token       = request.query.token;
       
       // Make 'Parking' a synonym for 'StreetParking' and 'ParkingLot'
       var index = types.indexOf(PARKING);
@@ -99,6 +103,10 @@ server.route({
         // full georel param (needed for Orion v2 queries)
         fullGeoRel: georel
       };
+      
+      if (token) {
+        requestData.token = token;
+      }
        
       // Obtains the end point which provides data about the city
       getEndPointData(coords).then(function (configData) {
@@ -109,9 +117,6 @@ server.route({
           console.warn('Configuration not found for the city. Empty response');
           return Promise.resolve([]);
         }
-      }, function err(error) {
-          console.error('Error: ', error);
-          reply(error);
       }).then(function (data) {
           if (!data) {
             return;
@@ -132,23 +137,36 @@ server.route({
     }
 });
 
-// Obtains the final data to be delivered to the client
+
 function getData(configData, requestData) {
-  var requests = [];
-  
-  var brokers = configData.cityBrokers;
-  
-  requestData.types.forEach(function(aType) {
-    if (brokers[aType]) {
-      var brokerData = brokers[aType];
-      var retriever = getRetriever(brokerData, requestData);
-      requests.push(retriever);
-    }
-    else {
-      console.warn('No provider found for: ', aType);
-    }
+  return new Promise(function(resolve, reject) {
+    getDataPhase1(configData, requestData).then(function(results) {
+      if (requestData.types.indexOf('.*') === -1) {
+        resolve(results);
+        return;
+      }
+      
+      // This checks what was returned by the Business Framework
+      if (results[requestData.types.length]) {
+        console.log('BF Response: ', JSON.stringify(results[requestData.types.length]));
+        resolve(results.slice(0, results.length - 2));
+      }
+    }, reject);
   });
-  
+}
+
+// Obtains the final data to be delivered to the client
+function getDataPhase1(configData, requestData) {
+  var requests = prepareDataRequest(configData.cityBrokers, requestData);
+  // Take opportunity to query the BF to check if there are additional
+  if (requestData.types.indexOf('.*') !== -1) {
+    requests.push(new Bf.BfQuery(requestData.token));
+  }
+  return executeTasks(requests);
+}
+
+// Executes a set of tasks in parallel 
+function executeTasks(requests) {
   var executionData = Promise.parallel(requests);
   
   var resultHandler = function(r) {
@@ -167,6 +185,23 @@ function getData(configData, requestData) {
   }   
   
   return executionData.all;
+}
+
+function prepareDataRequest(brokers, requestData) {
+  var requests = [];
+  
+  requestData.types.forEach(function(aType) {
+    if (brokers[aType]) {
+      var brokerData = brokers[aType];
+      var retriever = getRetriever(brokerData, requestData);
+      requests.push(retriever);
+    }
+    else {
+      console.warn('No provider found for: ', aType);
+    }
+  });
+  
+  return requests;
 }
 
 // Determines a provider function
