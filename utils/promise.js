@@ -1,14 +1,12 @@
 'use strict';
 
 // 10 seconds
-const DEFAULT_TIMEOUT_PROMISE = 10000;
+const DEFAULT_TIMEOUT_PROMISE = 5000;
 
 // Promise.parallel executes the list of runnables in batches which are
 // transparent to the developer
 Promise.parallel = function(runnables, pbatchSize) {
   const DEFAULT_BATCH_SIZE = 4;
-  
-  console.log('Parallel ...');
   
   var batchSize = Math.min(pbatchSize || DEFAULT_BATCH_SIZE, runnables.length);
 
@@ -87,8 +85,6 @@ Promise.parallel = function(runnables, pbatchSize) {
         errorFunction('Timeout');
       }, DEFAULT_TIMEOUT_PROMISE);
       
-      console.log('Timeout id: ', timeoutId);
-      
       runnables[nextToRun].run().then(resolutionFunction, errorFunction);
     },
 
@@ -144,8 +140,6 @@ function* parallelGen(runnables, batchSize, futureHandler) {
         
         futureHandler.onerror(index, 'timeout');        
       }, DEFAULT_TIMEOUT_PROMISE);
-      
-      console.log('Timeout id', timeoutId);
       
       runnables[j].run().then(function(result) {
         clearTimeout(timeoutId);

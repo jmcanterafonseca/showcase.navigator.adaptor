@@ -3,7 +3,7 @@
 const Request = require('request');
 const adaptorsMap = require('./adaptors.js');
 
-const DEFAULT_TIMEOUT = 10000;
+const DEFAULT_TIMEOUT = 5000;
 
 function NgsiV2Retriever(serviceData, queryData) {
   this.serviceData = serviceData;
