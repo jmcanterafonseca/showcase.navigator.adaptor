@@ -69,7 +69,9 @@ function calculatePollutants(item) {
 // Adapters map
 var adaptorsMap = {
   'porto-AmbientObserved' : porto_AmbientObserved,
-  'porto-ParkingLot'      : porto_ParkingLot
+  'porto-ParkingLot'      : porto_ParkingLot,
+  'porto-Garage'          : porto_Garage,
+  'porto-GasStation'      : porto_GasStation
 }
 
 // Adapts Ambient Observed data coming from Porto
@@ -96,7 +98,7 @@ function porto_ParkingLot(data) {
   return data.map(function(item) {
     var out = {
       type:                'ParkingLot',
-      id:                  'porto-ParkingLot-' + '-' + item.id,
+      id:                  'porto-ParkingLot' + '-' + item.id,
       name:                item.name,
       location:            item.geom_feature,
       totalSpotNumber:     randomIntInc([300, 500]),
@@ -113,5 +115,46 @@ function porto_ParkingLot(data) {
     return out;
   });
 }
+
+function porto_GasStation(data) {
+  return data.map(function(item) {
+    var out = {
+      type:                'GasStation',
+      id:                  'porto-GasStation' + '-' + item.id,
+      name:                item.name,
+      location:            item.geom_feature,
+      address: {
+        streetAddress:     item.street,
+        addressLocality:   item.municipality,
+        addressCountry:    item.country
+      },
+      description:         item.metadata && item.metadata.description &&
+                            item.metadata.description.eng 
+    };
+    
+    return out;
+  });
+}
+
+function porto_Garage(data) {
+  return data.map(function(item) {
+    var out = {
+      type:                'Garage',
+      id:                  'porto-Garage' + '-' + item.id,
+      name:                item.name,
+      location:            item.geom_feature,
+      address: {
+        streetAddress:     item.street,
+        addressLocality:   item.municipality,
+        addressCountry:    item.country
+      },
+      description:         item.metadata && item.metadata.description &&
+                            item.metadata.description.eng 
+    };
+    
+    return out;
+  });
+}
+
 
 module.exports = adaptorsMap;

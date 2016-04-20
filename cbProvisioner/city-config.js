@@ -88,7 +88,8 @@ var contextDataPorto = {
         serviceType: 'ost',
         key: 'hackacityporto2015_server',
         payment: true,
-        entityType: 'GasStation'
+        entityType: 'GasStation',
+        adapterKey:  'porto-GasStation'
       },
       Garage: {
         url: 'https://api.ost.pt/ngsi10/contextEntityTypes/pois',
@@ -96,7 +97,8 @@ var contextDataPorto = {
         serviceType: 'ost',
         key: 'hackacityporto2015_server',
         payment: true,
-        entityType: 'Garage'
+        entityType: 'Garage',
+        adapterKey:  'porto-Garage'
       }
     }
 };

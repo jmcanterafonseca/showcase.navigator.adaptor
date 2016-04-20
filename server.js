@@ -27,6 +27,10 @@ const PARKING        = 'Parking';
 const STREET_PARKING = 'StreetParking';
 const PARKING_LOT    = 'ParkingLot';
 
+// Any type. The client indicates that it can accept any entity type
+// provided the user has paid for it
+const ANY_TYPE = '__any__';
+
 const Bf = require('./business_fwk.js');
 
 server.route({
@@ -85,12 +89,19 @@ server.route({
       
       var token       = request.query.token;
       
+      var isAnyType   = false;
+      var ianyType = types.indexOf(ANY_TYPE);
+      if (ianyType !== -1) {
+        isAnyType = true;
+        types.splice(ianyType, 1);
+      }
+      
       // Make 'Parking' a synonym for 'StreetParking' and 'ParkingLot'
       var index = types.indexOf(PARKING);
       if (index !== -1) {
-        types = types.filter(function (item) {
-          return (item !== PARKING);
-        });
+        // Removing parking generic alias
+        types.splice(index, 1);
+        // Adding two specific 
         types = types.concat([STREET_PARKING, PARKING_LOT]);
       }
        
@@ -101,7 +112,8 @@ server.route({
         types:    types,
         maxDistance: maxDistance,
         // full georel param (needed for Orion v2 queries)
-        fullGeoRel: georel
+        fullGeoRel: georel,
+        isAnyType: isAnyType
       };
       
       if (token) {
@@ -123,12 +135,14 @@ server.route({
           }
           // Here smart city data is ready to be delivered
           var out = [];
+          
           for (let result of data.results) {
             if (result) {
               result = Array.isArray(result) ? result : [result];
               out = out.concat(result);
             }
           }
+          
           reply(out);
       }).catch(function (err) {
         console.error(err);
@@ -140,16 +154,45 @@ server.route({
 
 function getData(configData, requestData) {
   return new Promise(function(resolve, reject) {
-    getDataPhase1(configData, requestData).then(function(results) {
-      if (requestData.types.indexOf('.*') === -1) {
-        resolve(results);
+    getDataPhase1(configData, requestData).then(function(data) {
+      if (!requestData.isAnyType) {
+        resolve(data);
         return;
       }
       
+      var results = data.results;
+      
       // This checks what was returned by the Business Framework
-      if (results[requestData.types.length]) {
-        console.log('BF Response: ', JSON.stringify(results[requestData.types.length]));
-        resolve(results.slice(0, results.length - 2));
+      var initialRequestLength = requestData.types.length;
+      
+      if (results[initialRequestLength]) {
+        var bfResponse = results[initialRequestLength];
+        
+        // Removing the BF data from the final results
+        results.splice(initialRequestLength, 1);
+        
+        console.log('BF Response: ', JSON.stringify(bfResponse));        
+        var paidDatasets = bfResponse.paidDatasets;
+        
+        // Once the extra (paid) datasets are known, then a query is done
+        // and the final result delivered is obtained by merging
+        
+        // A copy of request data is obtained
+        var newRequestData = JSON.parse(JSON.stringify(requestData));
+        // Extra types the user paid for
+        newRequestData.types = paidDatasets;
+        newRequestData.isAnyType = false;
+        
+        var requests = prepareDataRequest(configData.cityBrokers, newRequestData);
+        executeTasks(requests).then(function(extraData) {
+          extraData.results.forEach(function(aextraRes) {
+            if (aextraRes) {
+              results.push(aextraRes);
+            }
+          });
+          
+          resolve({ results: results });          
+        });
       }
     }, reject);
   });
@@ -159,7 +202,7 @@ function getData(configData, requestData) {
 function getDataPhase1(configData, requestData) {
   var requests = prepareDataRequest(configData.cityBrokers, requestData);
   // Take opportunity to query the BF to check if there are additional
-  if (requestData.types.indexOf('.*') !== -1) {
+  if (requestData.isAnyType) {
     requests.push(new Bf.BfQuery(requestData.token));
   }
   return executeTasks(requests);
@@ -191,7 +234,8 @@ function prepareDataRequest(brokers, requestData) {
   var requests = [];
   
   requestData.types.forEach(function(aType) {
-    if (brokers[aType]) {
+    // If a paid dataset is requested a token must be present
+    if (brokers[aType] && !(brokers[aType].payment && !requestData.token)) {
       var brokerData = brokers[aType];
       var retriever = getRetriever(brokerData, requestData);
       requests.push(retriever);

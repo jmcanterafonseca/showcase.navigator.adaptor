@@ -2,6 +2,8 @@
 
 const Request = require('request');
 
+const config  = require('./config.json');
+
 function BfQuery(token) {
   this.token = token;
 }
@@ -11,8 +13,12 @@ BfQuery.prototype.run = function() {
 }
 
 function getPurchasedDatasets(token) {
+  console.log('Purchased datasets: ', token);
+  
   return new Promise(function(resolve, reject) {
     var bfApi = config.businessFrameworkAPI;
+    
+    console.log(bfApi);
     
     Request({
       url: bfApi,
@@ -29,6 +35,8 @@ function getPurchasedDatasets(token) {
         var serviceData = body;
         var out = [];
         
+        console.log(JSON.stringify(serviceData));
+        
         serviceData.forEach(function(aService) {
           var productCharacteristics = aService.productCharacteristic;
           var obj = Object.create(null);
@@ -43,7 +51,10 @@ function getPurchasedDatasets(token) {
           out.push(obj);
         });
         
-        resolve(out);
+        resolve({ paidDatasets: [
+          'Garage',
+          'GasStation'
+        ] });
     });
   });  
 }
