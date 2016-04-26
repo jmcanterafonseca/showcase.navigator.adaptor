@@ -51,10 +51,7 @@ function getPurchasedDatasets(token) {
           out.push(obj);
         });
         
-        resolve({ paidDatasets: [
-          'Garage',
-          'GasStation'
-        ] });
+        resolve({ paidDatasets: out });
     });
   });  
 }

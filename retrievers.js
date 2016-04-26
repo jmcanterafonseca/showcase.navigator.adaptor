@@ -23,6 +23,8 @@ function queryOrionV2(serviceData, queryData) {
       Object.keys(queryData.q).forEach(function(aKey) {
         q += aKey + '==' + queryData.q[aKey] + ';'
       });
+      // Avoid the trailing ';' Orion does not like
+      q = q.substring(0, q.length - 1);
     }
     
     if (serviceData.q) {

@@ -90,10 +90,13 @@ server.route({
       var token       = request.query.token;
       
       var isAnyType   = false;
-      var ianyType = types.indexOf(ANY_TYPE);
-      if (ianyType !== -1) {
-        isAnyType = true;
-        types.splice(ianyType, 1);
+      var indexAnyType = types.indexOf(ANY_TYPE);
+      if (indexAnyType !== -1) {
+        // Any type will be ignored if no token is provided
+        if (token) {
+          isAnyType = true;
+        }        
+        types.splice(indexAnyType, 1);
       }
       
       // Make 'Parking' a synonym for 'StreetParking' and 'ParkingLot'
@@ -180,7 +183,10 @@ function getData(configData, requestData) {
         // A copy of request data is obtained
         var newRequestData = JSON.parse(JSON.stringify(requestData));
         // Extra types the user paid for
-        newRequestData.types = paidDatasets;
+        newRequestData.types = [];
+        paidDatasets.forEach(function(aDataset) {
+          newRequestData.types.push(aDataset.entityType);
+        });
         newRequestData.isAnyType = false;
         
         var requests = prepareDataRequest(configData.cityBrokers, newRequestData);
