@@ -39,7 +39,7 @@ var contextDataPorto = {
     
     cityBrokers: {
       AmbientArea: {
-        url: 'http://130.206.83.68:1026/v2',
+        url: 'http://130.206.83.68:1026/v2/entities',
         entityType: 'AmbientArea',
         serviceType: 'ngsi-v2'
       },
@@ -74,7 +74,7 @@ var contextDataPorto = {
         entityType: 'CityEvent'
       },
       WeatherForecast: {
-        url:    'http://130.206.83.68:1028/v2',
+        url:    'http://130.206.83.68:1028/v2/entities',
         q: {
           country: 'PT',
           addressLocality: 'Porto'
@@ -140,7 +140,7 @@ var contextDataSantander = {
   cityBrokers: {
     /*
     OnStreetParking: {
-      url: 'http://130.206.83.68:1026/v2',
+      url: 'http://130.206.83.68:1026/v2/entities',
       entityType: 'StreetParking',
       pattern: 'santander.*',
       serviceType: 'ngsi-v2'
@@ -167,7 +167,7 @@ var contextDataSantander = {
       fiwareService: 'smartsantander'
     }, */
     PointOfInterest: {
-      url: 'http://130.206.118.244:1027/v2',
+      url: 'http://130.206.118.244:1027/v2/entities',
       entityType: 'PointOfInterest',
       serviceType:   'ngsi-v2',
       fiwareService: 'poi',
@@ -177,7 +177,7 @@ var contextDataSantander = {
       password: 'dev_poi_pwd'
     },
     WeatherForecast: {
-      url: 'http://130.206.118.244:1027/v2',
+      url: 'http://130.206.118.244:1027/v2/entities',
       q: {
         "address.addressLocality": "Santander"
       },
@@ -191,7 +191,7 @@ var contextDataSantander = {
       password: 'dev_weather_PWD'
     },
     WeatherObserved: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "Santander"
         },
@@ -216,7 +216,7 @@ var contextDataSevilla = {
   
   cityBrokers: {
     PointOfInterest: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         entityType: 'PointOfInterest',
         serviceType:   'ngsi-v2',
         fiwareService: 'poi',
@@ -226,7 +226,7 @@ var contextDataSevilla = {
         password: 'dev_poi_pwd'
     },
     WeatherForecast: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "Sevilla"
         },
@@ -240,7 +240,7 @@ var contextDataSevilla = {
         password: 'dev_weather_PWD'
     },
     WeatherObserved: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "Sevilla"
         },
@@ -265,7 +265,7 @@ var contextDataMalaga = {
   
   cityBrokers: {
     PointOfInterest: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         entityType: 'PointOfInterest',
         serviceType:   'ngsi-v2',
         fiwareService: 'poi',
@@ -275,7 +275,7 @@ var contextDataMalaga = {
         password: 'dev_poi_pwd'
     },
     WeatherForecast: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "Málaga"
         },
@@ -289,7 +289,7 @@ var contextDataMalaga = {
         password: 'dev_weather_PWD'
     },
     WeatherObserved: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "Málaga"
         },
@@ -302,14 +302,14 @@ var contextDataMalaga = {
         password: 'dev_weather_PWD'
     },
     OffStreetParking: {
-        url: 'http://217.172.12.177:1026/v2',
+        url: 'http://217.172.12.177:1026/v2/entities',
         entityType:    'OffStreetParking',
         serviceType:   'ngsi-v2',
         fiwareService: 'Malaga',
         fiwareServicePath: '/parking/harmonized',
     },
     AirQualityObserved: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         entityType: 'AirQualityObserved',
         serviceType:   'ngsi-v2',
         fiwareService: 'airquality',
@@ -331,7 +331,7 @@ var contextDataCorunaA = {
   
   cityBrokers: {
     PointOfInterest: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         entityType: 'PointOfInterest',
         serviceType:   'ngsi-v2',
         fiwareService: 'poi',
@@ -341,7 +341,7 @@ var contextDataCorunaA = {
         password: 'dev_poi_pwd'
     },
     WeatherForecast: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "A Coruña"
         },
@@ -355,7 +355,7 @@ var contextDataCorunaA = {
         password: 'dev_weather_PWD'
     },
     WeatherObserved: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "Coruña, A"
         },
@@ -368,7 +368,9 @@ var contextDataCorunaA = {
         password: 'dev_weather_PWD'
     },
     OffStreetParking: {
-        
+        url: 'https://sofia2.com/sib-api/api/ngsi/v2/GSMA_OffStreetParking_Destino',
+        entityType: 'OffStreetParking',
+        serviceType: 'ngsi-v2-sofia',
     }
   }
 };
@@ -383,7 +385,7 @@ var contextDataMadrid = {
   
   cityBrokers: {
     AirQualityObserved: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         entityType: 'AirQualityObserved',
         serviceType:   'ngsi-v2',
         fiwareService: 'airquality',
@@ -393,7 +395,7 @@ var contextDataMadrid = {
         password: 'dev_airquality_PWD'
     },
     WeatherForecast: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "Madrid"
         },
@@ -407,7 +409,7 @@ var contextDataMadrid = {
         password: 'dev_weather_PWD'
     },
     WeatherObserved: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         q: {
             "address.addressLocality": "Madrid"
         },
@@ -420,7 +422,7 @@ var contextDataMadrid = {
         password: 'dev_weather_PWD'
     },
     PointOfInterest: {
-        url: 'http://130.206.118.244:1027/v2',
+        url: 'http://130.206.118.244:1027/v2/entities',
         entityType: 'PointOfInterest',
         serviceType:   'ngsi-v2',
         fiwareService: 'poi',

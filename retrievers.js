@@ -58,7 +58,6 @@ function queryOrionV2Data(serviceData, queryData) {
     
     var options = {
       baseUrl: serviceData.url,
-      url: '/entities',
       qs: {
         type: serviceData.entityType,
         options: 'keyValues'
@@ -96,7 +95,7 @@ function queryOrionV2Data(serviceData, queryData) {
       options.qs.orderBy  = 'geo:distance';
     }
     
-    console.log('Orion V2 query', JSON.stringify(options));
+    console.log('NGSI V2 query', JSON.stringify(options));
     console.log('Headers: ', JSON.stringify(options.headers));
     
     Request.get(options, function(err, response, body) {      

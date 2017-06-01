@@ -3,6 +3,10 @@
   
   "rootContextBrokerUrl": "http://130.206.121.52:1026",
   "configService": "GreenCities",
+  
+  "sofia2": {
+    "token": ""
+  },
 
   "here": {
     "geocodingUrl":        "http://geocoder.cit.api.here.com",
