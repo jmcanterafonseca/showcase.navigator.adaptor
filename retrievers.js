@@ -58,6 +58,7 @@ function queryOrionV2Data(serviceData, queryData) {
     
     var options = {
       baseUrl: serviceData.url,
+      uri: '',
       qs: {
         type: serviceData.entityType,
         options: 'keyValues'
