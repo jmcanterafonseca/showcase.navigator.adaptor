@@ -273,7 +273,7 @@ function getEndPointData(coords) {
     getCity(coords).then(function(cityData) {
       console.log('City data:', cityData);
       return new Retrievers.NgsiV2Retriever({
-        url: config.rootContextBrokerUrl + '/v2',
+        url: config.rootContextBrokerUrl + '/v2/entities',
         entityType: 'CityConfiguration',
         fiwareService: config.configService
       }, {
