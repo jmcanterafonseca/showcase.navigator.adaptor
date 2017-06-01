@@ -24,8 +24,8 @@ server.connection({
 
 
 const PARKING        = 'Parking';
-const STREET_PARKING = 'StreetParking';
-const PARKING_LOT    = 'ParkingLot';
+const STREET_PARKING = 'OnStreetParking';
+const PARKING_LOT    = 'OffStreetParking';
 
 // Any type. The client indicates that it can accept any entity type
 // provided the user has paid for it
@@ -133,8 +133,8 @@ server.route({
           return Promise.resolve([]);
         }
       }).then(function (data) {
-          if (!data) {
-            return;
+          if (!data || data.length === 0) {
+            return Promise.reject('No config data');
           }
           // Here smart city data is ready to be delivered
           var out = [];
@@ -274,7 +274,8 @@ function getEndPointData(coords) {
       console.log('City data:', cityData);
       return new Retrievers.NgsiV2Retriever({
         url: config.rootContextBrokerUrl + '/v2',
-        entityType: 'CityConfiguration'
+        entityType: 'CityConfiguration',
+        fiwareService: config.configService
       }, {
         q: cityData
       }).run();

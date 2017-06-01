@@ -1,15 +1,16 @@
 {
   "serverPort": 7007,
   
-  "rootContextBrokerUrl": "http://130.206.83.68:1026",
+  "rootContextBrokerUrl": "http://130.206.121.52:1026",
+  "configService": "GreenCities",
 
   "here": {
     "geocodingUrl":        "http://geocoder.cit.api.here.com",
     "reverseGeocodingUrl": "http://reverse.geocoder.cit.api.here.com",
     "placesUrl":           "http://places.cit.api.here.com",
     "routeUrl":            "http://route.cit.api.here.com",
-    "appId":               "faqhSeEexrsqMPMVCjj7",
-    "appCode":             "qMR9BDO48F9W-TA8wYlJOw"
+    "appId":               "UX3Sktily2gdvtW502EU",
+    "appCode":             "iU7Qmo4WC9ZE5FAOEYkRBA"
   },
   
   "magicTokenPayment": "businessecosystemmwc",

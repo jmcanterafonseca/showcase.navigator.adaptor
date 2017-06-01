@@ -1,0 +1,31 @@
+{
+  "name": "showcase.navigator.adaptor",
+  "version": "0.5.0",
+  "description": "Adaptor for the car navigator",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmcanterafonseca/showcase.navigator.adaptor.git"
+  },
+  "keywords": [
+    "smart",
+    "city",
+    "car",
+    "navigator"
+  ],
+  "author": "Jose Manuel Cantera",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jmcanterafonseca/showcase.navigator.adaptor/issues"
+  },
+  "homepage": "https://github.com/jmcanterafonseca/showcase.navigator.adaptor#readme",
+  "dependencies": {
+    "fiware-orion-client": "^0.5.9",
+    "hapi": "^16.3.0",
+    "joi": "^10.5.2"
+  }
+}

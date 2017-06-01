@@ -109,7 +109,7 @@ var contextDataAveiro = {
   id: 'aveiro-cityconfiguration',
   
   location: new Orion.Attribute('40.64123,-8.65391', 'geo:point'),
-  adressLocality: "Aveiro",
+  addressLocality: "Aveiro",
   addressCountry: "PRT",
   
   cityBrokers: {
@@ -138,13 +138,14 @@ var contextDataSantander = {
   addressCountry: "ESP",
   
   cityBrokers: {
-    StreetParking: {
+    /*
+    OnStreetParking: {
       url: 'http://130.206.83.68:1026/v2',
       entityType: 'StreetParking',
       pattern: 'santander.*',
       serviceType: 'ngsi-v2'
     },
-    ParkingLot: {
+    OffStreetParking: {
       url:     'http://mu.tlmat.unican.es:8099/v1',
       pattern: 'urn:x-iot:smartsantander:parking:indoor.*',
       serviceType:  'ngsi-v1',
@@ -152,84 +153,285 @@ var contextDataSantander = {
       fiwareService: 'smartsantander',
       fiwareServicePath: '/parking/#'
     },
-    AmbientObserved: {
+    AirQualityObserved: {
       url:     'http://mu.tlmat.unican.es:8099/v1',
       serviceType: 'ngsi-v1',
       entityType:  'AmbientObserved',
       pattern: 'urn:x-iot:smartsantander:environmental:mobile.*',
       fiwareService: 'smartsantander'
     },
-    AmbientArea: {
+    District: {
       url: 'http://mu.tlmat.unican.es:8099/v1',
       entityType: 'AmbientArea',
       serviceType: 'ngsi-v1',
       fiwareService: 'smartsantander'
+    }, */
+    PointOfInterest: {
+      url: 'http://130.206.118.244:1027/v2',
+      entityType: 'PointOfInterest',
+      serviceType:   'ngsi-v2',
+      fiwareService: 'poi',
+      fiwareServicePath: '/Spain',
+      idm: 'http://130.206.121.52:5001',
+      userName: 'dev_poi',
+      password: 'dev_poi_pwd'
     },
     WeatherForecast: {
-      url:    'http://130.206.83.68:1028/v2',
+      url: 'http://130.206.118.244:1027/v2',
       q: {
-        postalCode: '39001',
-        country: 'ES'
+        "address.addressLocality": "Santander"
       },
+      noGeoNeeded: true,
       entityType: 'WeatherForecast',
-      serviceType:   'ngsi-v2'
+      serviceType:   'ngsi-v2',
+      fiwareService: 'weather',
+      fiwareServicePath: '/Spain',
+      idm: 'http://130.206.121.52:5001',
+      userName: 'dev_weather',
+      password: 'dev_weather_PWD'
+    },
+    WeatherObserved: {
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "Santander"
+        },
+        entityType: 'WeatherObserved',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
     }
   }
 };
 
-  
 var contextDataSevilla = {
   type: 'CityConfiguration',
   id: 'sevilla-cityconfiguration',
   
   location: new Orion.Attribute('37.3879, -6.00198', 'geo:point'),
-  adressLocality: "Sevilla",
+  addressLocality: "Sevilla",
   addressCountry: "ESP",
   
   cityBrokers: {
-    ParkingLot: {
-      url:     'http://130.206.122.29:1026/v1',
-      serviceType:    'orion',
-      entityType:  'ParkingLotZone'
+    PointOfInterest: {
+        url: 'http://130.206.118.244:1027/v2',
+        entityType: 'PointOfInterest',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'poi',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_poi',
+        password: 'dev_poi_pwd'
     },
     WeatherForecast: {
-      url:    'http://130.206.83.68:1028/v2',
-      q: {
-        postalCode: '41001',
-        country: 'ES'
-      },
-      entity: 'WeatherForecast',
-      type:   'ngsi-v2'
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "Sevilla"
+        },
+        noGeoNeeded: true,
+        entityType: 'WeatherForecast',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
+    },
+    WeatherObserved: {
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "Sevilla"
+        },
+        entityType: 'WeatherObserved',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
     }
   }
 };
+
+var contextDataMalaga = {
+  type: 'CityConfiguration',
+  id: 'malaga-cityconfiguration',
+  
+  location: new Orion.Attribute('36.7585406, -4.3971722', 'geo:point'),
+  addressLocality: "Málaga",
+  addressCountry: "ESP",
+  
+  cityBrokers: {
+    PointOfInterest: {
+        url: 'http://130.206.118.244:1027/v2',
+        entityType: 'PointOfInterest',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'poi',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_poi',
+        password: 'dev_poi_pwd'
+    },
+    WeatherForecast: {
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "Málaga"
+        },
+        noGeoNeeded: true,
+        entityType: 'WeatherForecast',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
+    },
+    WeatherObserved: {
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "Málaga"
+        },
+        entityType: 'WeatherObserved',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
+    },
+    OffStreetParking: {
+        url: 'http://217.172.12.177:1026/v2',
+        entityType:    'OffStreetParking',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'Malaga',
+        fiwareServicePath: '/parking/harmonized',
+    },
+    AirQualityObserved: {
+        url: 'http://130.206.118.244:1027/v2',
+        entityType: 'AirQualityObserved',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'airquality',
+        fiwareServicePath: '/Spain_Malaga',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_airquality',
+        password: 'dev_airquality_PWD'
+    },
+  }
+};
+
+var contextDataCorunaA = {
+  type: 'CityConfiguration',
+  id: 'corunaA-cityconfiguration',
+  
+  location: new Orion.Attribute('43.3712591, -8.4188010', 'geo:point'),
+  addressLocality: "A Coruña",
+  addressCountry: "ESP",
+  
+  cityBrokers: {
+    PointOfInterest: {
+        url: 'http://130.206.118.244:1027/v2',
+        entityType: 'PointOfInterest',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'poi',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_poi',
+        password: 'dev_poi_pwd'
+    },
+    WeatherForecast: {
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "A Coruña"
+        },
+        noGeoNeeded: true,
+        entityType: 'WeatherForecast',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
+    },
+    WeatherObserved: {
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "Coruña, A"
+        },
+        entityType: 'WeatherObserved',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
+    },
+    OffStreetParking: {
+        
+    }
+  }
+};
+
 
 var contextDataMadrid = {
   type: 'CityConfiguration',
   id: 'madrid-cityconfiguration',
   location: new Orion.Attribute('40.42028,-3.70578', 'geo:point'),
-  
-  adressLocality: "Madrid",
+  addressLocality: "Madrid",
   addressCountry: "ESP",
   
   cityBrokers: {
-    AmbientObserved: {
-      url: 'http://130.206.83.68:1029/v1',
-      entityType: 'AmbientObserved',
-      pattern: 'Madrid.*',
-      serviceType: 'ngsi-v1'
+    AirQualityObserved: {
+        url: 'http://130.206.118.244:1027/v2',
+        entityType: 'AirQualityObserved',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'airquality',
+        fiwareServicePath: '/Spain_Madrid',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_airquality',
+        password: 'dev_airquality_PWD'
     },
     WeatherForecast: {
-      url:    'http://130.206.83.68:1028/v2',
-      q: {
-        postalCode: '28001',
-        country: 'ES'
-      },
-      entityType: 'WeatherForecast',
-      serviceType:   'ngsi-v2'
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "Madrid"
+        },
+        noGeoNeeded: true,
+        entityType: 'WeatherForecast',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
+    },
+    WeatherObserved: {
+        url: 'http://130.206.118.244:1027/v2',
+        q: {
+            "address.addressLocality": "Madrid"
+        },
+        entityType: 'WeatherObserved',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'weather',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_weather',
+        password: 'dev_weather_PWD'
+    },
+    PointOfInterest: {
+        url: 'http://130.206.118.244:1027/v2',
+        entityType: 'PointOfInterest',
+        serviceType:   'ngsi-v2',
+        fiwareService: 'poi',
+        fiwareServicePath: '/Spain',
+        idm: 'http://130.206.121.52:5001',
+        userName: 'dev_poi',
+        password: 'dev_poi_pwd'
     }
   }
 };
+
 
 var citiesKeyMap = {
   'Antwerp'   : contextDataAntwerp,
@@ -237,7 +439,9 @@ var citiesKeyMap = {
   'Madrid'    : contextDataMadrid,
   'Sevilla'   : contextDataSevilla,
   'Santander' : contextDataSantander,
-  'Aveiro'    : contextDataAveiro
+  'Aveiro'    : contextDataAveiro,
+  'Malaga'    : contextDataMalaga,
+  'CorunaA'  : contextDataCorunaA 
 };
 
 var cityData = [];
