@@ -315,8 +315,8 @@ var contextDataMalaga = {
         fiwareService: 'airquality',
         fiwareServicePath: '/Spain_Malaga',
         idm: 'http://130.206.121.52:5001',
-        userName: 'dev_airquality',
-        password: 'dev_airquality_PWD'
+        userName: 'greencities',
+        password: 'greencities_pwd'
     },
   }
 };
