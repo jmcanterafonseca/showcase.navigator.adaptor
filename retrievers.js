@@ -56,6 +56,10 @@ function queryOrionV2Data(serviceData, queryData) {
       });
     }
     
+    if (serviceData.extraQ) {
+      q += serviceData.extraQ;
+    }
+    
     var options = {
       baseUrl: serviceData.url,
       strictSSL:false,

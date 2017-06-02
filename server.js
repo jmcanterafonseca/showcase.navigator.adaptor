@@ -27,6 +27,8 @@ const PARKING        = 'Parking';
 const STREET_PARKING = 'OnStreetParking';
 const PARKING_LOT    = 'OffStreetParking';
 
+const WEATHER_FORECAST = 'WeatherForecast';
+
 // Any type. The client indicates that it can accept any entity type
 // provided the user has paid for it
 const ANY_TYPE = '__any__';
@@ -61,10 +63,11 @@ server.route({
         });
         return;
       }
-      
+      var georel1;
       var maxDistance = -1;
+      
       if (isNear) {
-        var georel1 = geoTokens[0];
+        georel1 = geoTokens[0];
         var georel2 = geoTokens[1];
       
         var distanceParams = georel2.split(':');
@@ -107,7 +110,14 @@ server.route({
         // Adding two specific 
         types = types.concat([STREET_PARKING, PARKING_LOT]);
       }
-       
+
+      var q = '';      
+      if (types.indexOf(WEATHER_FORECAST)) {
+        var today = new Date();
+        q = 'validFrom >' +
+              today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate();      
+      }
+      
       var requestData = {
         coords:   coords,
         georel:   georel1,
@@ -116,7 +126,8 @@ server.route({
         maxDistance: maxDistance,
         // full georel param (needed for Orion v2 queries)
         fullGeoRel: georel,
-        isAnyType: isAnyType
+        isAnyType: isAnyType,
+        extraQ: q
       };
       
       if (token) {
