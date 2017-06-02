@@ -34,6 +34,7 @@ function queryOrionV2(serviceData, queryData) {
 // Performs a query through NGSIv2
 function queryOrionV2Data(serviceData, queryData) {
   console.log(JSON.stringify(serviceData));
+  console.log(JSON.stringify(queryData));
   
   return new Promise(function(resolve, reject) {
     var q = '';
