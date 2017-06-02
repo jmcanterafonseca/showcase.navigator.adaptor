@@ -370,7 +370,7 @@ var contextDataCorunaA = {
     OffStreetParking: {
         url: 'https://sofia2.com/sib-api/api/ngsi/v2/GSMA_OffStreetParking_Destino',
         entityType: 'OffStreetParking',
-        serviceType: 'ngsi-v2-sofia',
+        serviceType: 'ngsi-v2-sofia2',
     }
   }
 };

@@ -84,6 +84,10 @@ function queryOrionV2Data(serviceData, queryData) {
        options.headers['x-auth-token'] = serviceData.token;
     }
     
+    if (serviceData.sofia2Token) {
+      options.headers['x-sofia2-apikey'] = serviceData.sofia2Token;
+    }
+    
     if (q.length > 0) {
       options.qs.q = q;
     }

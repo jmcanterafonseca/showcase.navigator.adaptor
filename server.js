@@ -259,7 +259,10 @@ function getRetriever(brokerData, requestData) {
   if (brokerData.serviceType === 'ngsi-v1') {
     return new Retrievers.NgsiV1Retriever(brokerData, requestData);
   }
-  else if (brokerData.serviceType === 'ngsi-v2') {
+  else if (brokerData.serviceType.startsWith('ngsi-v2')) {
+    if (brokerData.serviceType == 'ngsi-v2-sofia2') {
+      brokerData.sofia2Token = config.sofia2.token;
+    }
     return new Retrievers.NgsiV2Retriever(brokerData, requestData);
   }
   else if (brokerData.serviceType === 'ost') {
