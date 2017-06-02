@@ -55,6 +55,8 @@ function queryOrionV2Data(serviceData, queryData) {
         }
         q += aKey + ':' + value + ';';
       });
+      // Avoid the trailing ';' Orion does not like
+      q = q.substring(0, q.length - 1);
     }
     
     if (queryData.extraQ) {
