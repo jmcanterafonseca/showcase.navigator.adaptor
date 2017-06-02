@@ -138,13 +138,14 @@ var contextDataSantander = {
   addressCountry: "ESP",
   
   cityBrokers: {
-    /*
     OnStreetParking: {
-      url: 'http://130.206.83.68:1026/v2/entities',
-      entityType: 'StreetParking',
-      pattern: 'santander.*',
+      url: 'http://130.206.121.52:1026/v2/entities',
+      entityType: 'OnStreetParking',
+      fiwareService: 'santander',
+      fiwareServicePath: '/parking',
       serviceType: 'ngsi-v2'
     },
+    /*
     OffStreetParking: {
       url:     'http://mu.tlmat.unican.es:8099/v1',
       pattern: 'urn:x-iot:smartsantander:parking:indoor.*',
