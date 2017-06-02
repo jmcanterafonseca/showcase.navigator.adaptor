@@ -114,8 +114,11 @@ server.route({
       var q = '';      
       if (types.indexOf(WEATHER_FORECAST) !== -1) {
         var today = new Date();
-        q = 'validFrom' + '>' +
-              today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();      
+        
+        var validFrom = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var validTo = validFrom + 'T23:59:00';
+        
+        q = 'validFrom' + '>' + validFrom + ';' + 'validTo' + '<=' + validTo;
       }
       
       var requestData = {
