@@ -58,7 +58,7 @@ function queryOrionV2Data(serviceData, queryData) {
     }
     
     if (queryData.extraQ) {
-      q += ';' + serviceData.extraQ;
+      q += ';' + queryData.extraQ;
     }
     
     var options = {

@@ -112,7 +112,7 @@ server.route({
       }
 
       var q = '';      
-      if (types.indexOf(WEATHER_FORECAST)) {
+      if (types.indexOf(WEATHER_FORECAST) !== -1) {
         var today = new Date();
         q = 'validFrom >' +
               today.getFullYear() + '-' + today.getMonth() + '-' + today.getDate();      
